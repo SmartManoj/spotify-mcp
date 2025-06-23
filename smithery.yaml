@@ -1,0 +1,29 @@
+# Smithery configuration file: https://smithery.ai/docs/build/project-config
+
+startCommand:
+  type: stdio
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config)=>({command:'spotify-mcp',args:[],env:{SPOTIFY_CLIENT_ID:config.spotifyClientId,SPOTIFY_CLIENT_SECRET:config.spotifyClientSecret,SPOTIFY_REDIRECT_URI:config.spotifyRedirectUri}})
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    required:
+      - spotifyClientId
+      - spotifyClientSecret
+      - spotifyRedirectUri
+    properties:
+      spotifyClientId:
+        type: string
+        description: Spotify API client ID
+      spotifyClientSecret:
+        type: string
+        description: Spotify API client secret
+      spotifyRedirectUri:
+        type: string
+        description: Spotify redirect URI, e.g., http://127.0.0.1:8080/callback
+  exampleConfig:
+    spotifyClientId: your_client_id
+    spotifyClientSecret: your_client_secret
+    spotifyRedirectUri: http://127.0.0.1:8080/callback
