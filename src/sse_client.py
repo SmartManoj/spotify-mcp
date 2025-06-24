@@ -43,9 +43,9 @@ class SpotifyMCPClient:
 
     async def cleanup(self):
         """Properly clean up the session and streams"""
-        if self._session_context:
+        if getattr(self, "_session_context", None):
             await self._session_context.__aexit__(None, None, None)
-        if self._streams_context:
+        if getattr(self, "_streams_context", None):
             await self._streams_context.__aexit__(None, None, None)
 
     async def test_tool(self, tool_name: str, arguments: dict) -> str:
