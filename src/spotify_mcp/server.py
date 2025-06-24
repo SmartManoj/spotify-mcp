@@ -5,6 +5,7 @@ import logging
 import sys
 from enum import Enum
 import json
+import traceback
 from typing import List, Optional, Tuple
 from datetime import datetime
 from pathlib import Path
@@ -346,7 +347,8 @@ async def handle_call_tool(
             text=f"An error occurred with the Spotify Client: {str(se)}"
         )]
     except Exception as e:
-        error_msg = f"Unexpected error occurred: {str(e)}"
+        # error_msg = f"Unexpected error occurred: {str(e)}"
+        error_msg = f"Unexpected error occurred: {traceback.format_exc()}"
         logger.error(error_msg)
         return [types.TextContent(
             type="text",
