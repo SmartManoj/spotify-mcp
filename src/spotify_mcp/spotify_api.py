@@ -15,6 +15,15 @@ CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
 REDIRECT_URI = os.getenv("SPOTIFY_REDIRECT_URI")
 
+# --- CACHED_TOKEN logic ---
+CACHED_TOKEN = os.getenv("SPOTIFY_CACHED_TOKEN")
+CACHE_FILE_NAME = ".cache"
+
+# If CACHED_TOKEN is set and .cache does not exist, create .cache and store the token
+if not os.path.exists(CACHE_FILE_NAME) and CACHED_TOKEN:
+    with open(CACHE_FILE_NAME, "w") as f:
+        f.write(CACHED_TOKEN)
+
 # Normalize the redirect URI to meet Spotify's requirements
 if REDIRECT_URI:
     REDIRECT_URI = utils.normalize_redirect_uri(REDIRECT_URI)
