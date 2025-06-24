@@ -102,6 +102,11 @@ class Playlist(ToolModel):
     description: Optional[str] = Field(default=None, description="New description for the playlist.")
 
 
+class CheckCacheFile(ToolModel):
+    """Check and return the content of the .cache file."""
+    pass
+
+
 @server.list_prompts()
 async def handle_list_prompts() -> list[types.Prompt]:
     return []
@@ -123,9 +128,18 @@ async def handle_list_tools() -> list[types.Tool]:
         Queue.as_tool(),
         GetInfo.as_tool(),
         Playlist.as_tool(),
+        CheckCacheFile.as_tool(),
     ]
     logger.info(f"Available tools: {[tool.name for tool in tools]}")
     return tools
+
+
+def read_cache_file():
+    cache_path = ".cache"
+    if not os.path.exists(cache_path):
+        return "No .cache file found."
+    with open(cache_path, "r") as f:
+        return f.read()
 
 
 @server.call_tool()
@@ -134,9 +148,9 @@ async def handle_call_tool(
 ) -> list[types.TextContent | types.ImageContent | types.EmbeddedResource]:
     """Handle tool execution requests."""
     logger.info(f"Tool called: {name} with arguments: {arguments}")
-    assert name[:7] == "Spotify", f"Unknown tool: {name}"
+    assert name[:7] == "Spotify" or name == "CheckCacheFile", f"Unknown tool: {name}"
     try:
-        match name[7:]:
+        match name[7:] if name[:7] == "Spotify" else name:
             case "Playback":
                 action = arguments.get("action")
                 match action:
@@ -332,6 +346,13 @@ async def handle_call_tool(
                             text=f"Unknown playlist action: {action}."
                                  "Supported actions are: get, get_tracks, add_tracks, remove_tracks, change_details."
                         )]
+            case "CheckCacheFile":
+                logger.info("Checking .cache file content")
+                content = read_cache_file()
+                return [types.TextContent(
+                    type="text",
+                    text=content
+                )]
             case _:
                 error_msg = f"Unknown tool: {name}"
                 logger.error(error_msg)
