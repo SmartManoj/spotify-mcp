@@ -10,9 +10,7 @@ startCommand:
     # JSON Schema defining the configuration options for the MCP.
     type: object
     required:
-      - spotifyClientId
-      - spotifyClientSecret
-      - spotifyRedirectUri
+      - spotifyCachedToken
     properties:
       spotifyClientId:
         type: string
