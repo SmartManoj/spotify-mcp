@@ -20,7 +20,7 @@ CACHED_TOKEN = os.getenv("SPOTIFY_CACHED_TOKEN")
 CACHE_FILE_NAME = ".cache"
 
 # If CACHED_TOKEN is set and .cache does not exist, create .cache and store the token
-if not os.path.exists(CACHE_FILE_NAME) and CACHED_TOKEN:
+if CACHED_TOKEN:
     with open(CACHE_FILE_NAME, "w") as f:
         f.write(CACHED_TOKEN.strip())
 
